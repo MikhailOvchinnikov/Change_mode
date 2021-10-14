@@ -97,23 +97,30 @@ int main(void)
 		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
 		HAL_Delay(interrupt);
 		int count = 0;
-		while(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13))
+		if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13))
 		{
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
-				count++;
-			if(count >= 1600000)
+			HAL_Delay(100);
+			if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13))
 			{
-				if(interrupt == 500)
+				while(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13))
 				{
-					interrupt = 200;
-					while(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));
-					break;
-				}
-				else
-				{
-					interrupt = 500;
-					while(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));
-					break;
+					HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
+						count++;
+					if(count >= 1600000)
+					{
+						if(interrupt == 500)
+						{
+							interrupt = 200;
+							while(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));
+							break;
+						}
+						else
+						{
+							interrupt = 500;
+							while(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13));
+							break;
+						}
+					}
 				}
 			}
 		}
